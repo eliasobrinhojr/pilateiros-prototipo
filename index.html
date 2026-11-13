@@ -107,6 +107,29 @@ button { cursor: pointer; }
 .rank .pts { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
 .code { font-family: var(--font-display); letter-spacing: 2px; }
 
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { background: var(--tint); border-radius: 999px; padding: 3px 10px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.stat3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: var(--tint); border-radius: 14px; padding: 12px; font-size: 13px; color: var(--muted); }
+.stat b { font-family: var(--font-display); font-size: 20px; display: block; color: var(--ink); }
+.bar-row { display: grid; grid-template-columns: 78px 1fr 20px; align-items: center; gap: 10px; font-size: 14px; }
+.bar { height: 10px; border-radius: 999px; background: var(--tint); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.pain { display: flex; align-items: flex-end; gap: 6px; height: 64px; border-bottom: 1px solid var(--line); }
+.pain span { flex: 1; max-width: 36px; background: var(--sun); border-radius: 6px 6px 0 0; min-height: 4px; }
+.scale { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.scale button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 10px 0; font-weight: 700; }
+.badge { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--sun); color: var(--ink); flex: none; }
+.badge svg { width: 22px; height: 22px; }
+.badge.off { background: var(--tint); color: var(--muted); }
+.who { border: 1px solid var(--line); border-left: 4px solid var(--good); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.who.warn { border-left-color: var(--accent); }
+.btn-sm { width: auto; min-height: 40px; padding: 8px 14px; font-size: 14px; }
+.wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
 #toast { position: absolute; left: 20px; right: 20px; bottom: 20px; background: var(--ink); color: #FFFFFF; padding: 12px 16px; border-radius: 14px; font-size: 15px; text-align: center; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; }
 #toast.show { opacity: 1; transform: none; }
 
@@ -127,11 +150,12 @@ button { cursor: pointer; }
   </div>
   <aside class="side">
     <h1>Como testar o protótipo</h1>
-    <p>As sete telas da primeira versão do app, com dados de exemplo. Nada é salvo.</p>
+    <p>As telas da primeira versão do app, com dados de exemplo. Nada é salvo.</p>
     <ol>
       <li>Entre e faça o cadastro, ou use “Já tenho conta” para ver o app em uso.</li>
       <li>Entre em um grupo com o código <code>PILA7</code>, ou crie o seu.</li>
-      <li>Faça um check-in com foto e veja a sequência e o ranking mudarem.</li>
+      <li>Faça um check-in com foto, aparelho e foco, e veja a sequência e o ranking mudarem.</li>
+      <li>Abra “Minha evolução” no início. Na tela de entrada, “Sou instrutora” mostra o painel da turma.</li>
     </ol>
     <p>No celular, o protótipo ocupa a tela inteira.</p>
   </aside>
@@ -148,15 +172,18 @@ const IC = {
 };
 const COLORS = { Marina: '#7A4FA3', Paula: '#1F7A5A', 'Jô': '#2B6CB0', Renata: '#B7791F' };
 const TAKEN = ['ana', 'bia', 'carol', 'marina'];
+const APS = ['Reformer', 'Cadillac', 'Chair', 'Barrel', 'Solo'];
+const FOCOS = ['Core', 'Postura', 'Flexibilidade', 'Força', 'Mobilidade'];
 let S, toastTimer;
 
 function demoGroup() {
   return { id: 'g1', name: 'Turma das 7h', code: 'PILA7',
     members: [ { name: 'Marina', aulas: 8, metas: 3 }, { name: 'Paula', aulas: 6, metas: 2 }, { name: 'Jô', aulas: 5, metas: 1 }, { name: 'Renata', aulas: 3, metas: 0 } ],
-    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12 }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205 }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150 } ] };
+    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12, ap: 'Reformer', focos: ['Core'] }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205, ap: 'Solo', focos: ['Mobilidade'] }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150, ap: 'Cadillac', focos: ['Postura', 'Flexibilidade'] } ] };
 }
 function reset() {
-  S = { screen: 'entrar', user: null, draftGoal: 2, week: 0, streak: 0, done: false, me: { aulas: 0, metas: 0 }, groups: [], gid: null, tab: 'feed', photo: null, joinMode: 'entrar', err: '', last: null };
+  S = { screen: 'entrar', user: null, draftGoal: 2, week: 0, streak: 0, done: false, me: { aulas: 0, metas: 0 }, groups: [], gid: null, tab: 'feed', photo: null, joinMode: 'entrar', err: '', last: null,
+    ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {} };
   render();
 }
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -176,11 +203,13 @@ function toast(msg) {
 function go(screen) { S.screen = screen; S.err = ''; render(); document.getElementById('app').scrollTop = 0; }
 const avatar = (name, me) => '<span class="avatar" style="background:' + (me ? 'var(--accent)' : (COLORS[name] || '#566475')) + '">' + esc(name.charAt(0).toUpperCase()) + '</span>';
 const header = (title, back) => '<div class="top"><button type="button" class="icon-btn" data-a="go" data-to="' + back + '" aria-label="Voltar">' + IC.back + '</button><h2>' + title + '</h2></div>';
+const chip = (a, v, on) => '<button type="button" class="chip" aria-pressed="' + on + '" data-a="' + a + '" data-v="' + v + '">' + v + '</button>';
+const tags = p => (p.ap || (p.focos && p.focos.length)) ? '<div class="tags">' + (p.ap ? '<span class="tag">' + p.ap + '</span>' : '') + (p.focos || []).map(f => '<span class="tag">' + f + '</span>').join('') + '</div>' : '';
 const stepper = v => '<div class="stepper"><button type="button" data-a="goal" data-d="-1" aria-label="Diminuir meta">−</button><output id="goal-out">' + v + '</output><button type="button" data-a="goal" data-d="1" aria-label="Aumentar meta">+</button><span class="muted">aulas por semana</span></div>';
 
 const V = {
   entrar: () => '<div class="hero"><p class="pill" style="align-self:flex-start">Para quem não falta ao pilates</p><h1 class="brand">Pila<span>teiros</span></h1><p class="muted">Registre cada aula, mantenha a sequência e dispute o ranking com a sua turma.</p></div>' +
-    '<div class="body"><button type="button" class="btn btn-dark" data-a="login">Entrar com Google</button><button type="button" class="btn" data-a="login">Entrar com Apple</button><button type="button" class="link" data-a="demo">Já tenho conta: ver o app em uso</button><p class="small muted center">O login é simulado neste protótipo.</p></div>',
+    '<div class="body"><button type="button" class="btn btn-dark" data-a="login">Entrar com Google</button><button type="button" class="btn" data-a="login">Entrar com Apple</button><button type="button" class="link" data-a="demo">Já tenho conta: ver o app em uso</button><button type="button" class="link" data-a="instrutora">Sou instrutora: ver o painel da turma</button><p class="small muted center">O login é simulado neste protótipo.</p></div>',
 
   cadastro: () => header('Primeiro acesso', 'entrar') + '<div class="body grow">' +
     '<div class="field"><label for="f-name">Seu nome</label><input id="f-name" autocomplete="off" maxlength="30" placeholder="Como a turma te chama"></div>' +
@@ -196,6 +225,7 @@ const V = {
       '<div class="card card-dark"><span class="small muted">Esta semana</span><div class="row"><span class="big">' + S.week + ' de ' + S.user.goal + '</span><span class="muted">aulas</span></div><div class="dots">' + dots + '</div>' +
       '<div class="streak">' + IC.flame + (S.streak ? S.streak + (S.streak === 1 ? ' semana seguida' : ' semanas seguidas') + ' batendo a meta' : 'Bata a meta para começar a sequência') + '</div></div>' +
       (S.done ? '<button type="button" class="btn" disabled>' + IC.check + 'Feito hoje</button>' : '<button type="button" class="btn btn-primary" data-a="go" data-to="checkin">' + IC.cam + 'Fazer check-in</button>') +
+      '<button type="button" class="btn" data-a="go" data-to="evolucao">Minha evolução</button>' +
       '<h3 class="section-title">Seus grupos</h3>' + groups +
       '<div class="two"><button type="button" class="btn" data-a="join" data-m="criar">Criar grupo</button><button type="button" class="btn" data-a="join" data-m="entrar">Tenho um código</button></div></div>';
   },
@@ -204,6 +234,8 @@ const V = {
     '<div class="photo' + (S.photo === 'sample' ? ' sample" style="background:linear-gradient(135deg,#C8432B,#F2B134)' : '') + '" id="photo-box">' + (S.photo && S.photo !== 'sample' ? '<img src="' + S.photo + '" alt="Foto escolhida para o check-in">' : S.photo === 'sample' ? IC.cam : '<span class="center">' + IC.cam + '<br>A foto é obrigatória</span>') + '</div>' +
     '<input type="file" accept="image/*" id="f-photo" class="file" tabindex="-1">' +
     '<div class="two"><button type="button" class="btn" data-a="pick">Tirar ou escolher</button><button type="button" class="btn" data-a="sample">Foto de exemplo</button></div>' +
+    '<div class="field"><b>Aparelho</b><div class="chips">' + APS.map(a => chip('ap', a, S.ap === a)).join('') + '</div></div>' +
+    '<div class="field"><b>Foco da aula</b><div class="chips">' + FOCOS.map(f => chip('foco', f, S.focos.includes(f))).join('') + '</div></div>' +
     '<div class="field"><label for="f-note">Nota (opcional)</label><textarea id="f-note" maxlength="140" placeholder="Como foi a aula?"></textarea></div>' +
     '<div class="progress" id="up" hidden><i></i></div><div class="grow"></div>' +
     '<button type="button" class="btn btn-primary" data-a="confirm" id="btn-confirm"' + (S.photo ? '' : ' disabled') + '>Confirmar check-in</button></div>',
@@ -222,7 +254,7 @@ const V = {
     const feed = g.feed.length ? g.feed.map(p => { const me = p.who === 'me'; const name = me ? S.user.name : p.who;
       return '<article class="post"><div class="row">' + avatar(name, me) + '<span><b>' + esc(name) + (me ? ' (você)' : '') + '</b><br><span class="small muted">' + p.when + '</span></span></div>' +
         '<div class="photo sample" style="background:' + (p.photo && p.photo !== 'sample' ? 'var(--tint)' : p.photo === 'sample' ? 'linear-gradient(135deg,#C8432B,#F2B134)' : 'linear-gradient(135deg,hsl(' + p.hue + ' 45% 42%),hsl(' + (p.hue + 40) + ' 55% 62%))') + '">' + (p.photo && p.photo !== 'sample' ? '<img src="' + p.photo + '" alt="Foto do check-in">' : IC.cam) + '</div>' +
-        (p.note ? '<p style="margin:0">' + esc(p.note) + '</p>' : '') + '</article>'; }).join('')
+        tags(p) + (p.note ? '<p style="margin:0">' + esc(p.note) + '</p>' : '') + '</article>'; }).join('')
       : '<div class="empty"><p style="margin:0">Ninguém fez check-in ainda. Seja a primeira pessoa do grupo.</p></div>';
     const rank = ranking(g).map((r, i) => '<div class="rank' + (r.me ? ' me' : '') + '"><span class="pos">' + (i + 1) + 'º</span>' + avatar(r.name, r.me) + '<span><b>' + esc(r.name) + (r.me ? ' (você)' : '') + '</b><br><span class="small muted">' + r.aulas + (r.aulas === 1 ? ' aula' : ' aulas') + '</span></span><span class="pts">' + r.p + ' pts</span></div>').join('');
     return header(esc(g.name), 'inicio') + '<div class="body">' +
@@ -237,6 +269,47 @@ const V = {
       : '<div class="field"><label for="f-code">Código de convite</label><input id="f-code" maxlength="8" autocomplete="off" placeholder="exemplo: PILA7" style="text-transform:uppercase"></div><p class="small muted">Para testar, use o código PILA7.</p>') +
     (S.err ? '<p class="error">' + S.err + '</p>' : '') + '<div class="grow"></div><button type="button" class="btn btn-primary" data-a="' + (S.joinMode === 'criar' ? 'create' : 'enter') + '">' + (S.joinMode === 'criar' ? 'Criar grupo' : 'Entrar no grupo') + '</button></div>',
 
+  evolucao: () => {
+    const total = APS.reduce((n, a) => n + S.hist[a], 0), maxv = Math.max(1, ...APS.map(a => S.hist[a]));
+    const bars = total ? APS.map(a => '<div class="bar-row"><span>' + a + '</span><span class="bar"><i style="width:' + Math.round(S.hist[a] / maxv * 100) + '%"></i></span><b>' + S.hist[a] + '</b></div>').join('')
+      : '<p class="small muted" style="margin:0">Marque o aparelho no check-in para ver as suas aulas aqui.</p>';
+    const pain = S.pain.length ? '<div class="pain" role="img" aria-label="Registros de dor: ' + S.pain.join(', ') + '">' + S.pain.map(v => '<span style="height:' + Math.max(6, v * 20) + '%"></span>').join('') + '</div>' +
+      (S.pain.length > 1 ? '<p class="small" style="margin:0"><b>De ' + S.pain[0] + ' para ' + S.pain[S.pain.length - 1] + '</b> desde o primeiro registro.</p>' : '')
+      : '<p class="small muted" style="margin:0">Registre depois de cada aula para acompanhar a sua evolução.</p>';
+    const badge = (on, title, sub) => '<div class="row"><span class="badge' + (on ? '' : ' off') + '">' + (on ? IC.check : IC.flame) + '</span><span><b>' + title + '</b><br><span class="small muted">' + sub + '</span></span></div>';
+    return header('Minha evolução', 'inicio') + '<div class="body">' +
+      '<div class="stat3"><div class="stat"><b>' + S.me.aulas + '</b>aulas no mês</div><div class="stat"><b>' + S.me.metas + '</b>metas batidas</div><div class="stat"><b>' + S.streak + '</b>semanas seguidas</div></div>' +
+      '<div class="card"><b>Aulas por aparelho</b>' + bars + '</div>' +
+      '<div class="card"><b>Como está o corpo</b><span class="small muted">Dor ou desconforto depois da aula, de 0 (nenhuma) a 5 (forte).</span>' + pain +
+      '<div class="scale">' + [0, 1, 2, 3, 4, 5].map(v => '<button type="button" data-a="pain" data-v="' + v + '" aria-label="Registrar dor ' + v + '">' + v + '</button>').join('') + '</div>' +
+      '<span class="small muted">Só você e a sua instrutora veem este registro.</span></div>' +
+      '<div class="card"><b>Conquistas</b>' +
+      badge(S.cem, 'Série de cem completa', S.cem ? 'Marcada pela instrutora' : 'A instrutora marca quando você conseguir') +
+      badge(S.streak >= 4, '4 semanas seguidas', S.streak >= 4 ? 'Conquistada' : S.streak + ' de 4 semanas') +
+      badge(S.hist.Reformer >= 10, '10 aulas no Reformer', Math.min(10, S.hist.Reformer) + ' de 10 aulas') +
+      badge(false, 'Primeiro teaser', 'A instrutora marca quando você conseguir') + '</div></div>';
+  },
+
+  painel: () => {
+    const done = k => S.nudged[k];
+    const act = (k, label, msg) => '<button type="button" class="btn btn-sm" data-a="nudge" data-k="' + k + '" data-msg="' + msg + '"' + (done(k) ? ' disabled' : '') + '>' + (done(k) ? 'Feito' : label) + '</button>';
+    return '<div class="top"><button type="button" class="icon-btn" data-a="logout" aria-label="Voltar">' + IC.back + '</button><h2>Turma das 7h<br><span class="small muted" style="font-family:var(--font-body);font-weight:400">Painel da instrutora</span></h2></div><div class="body">' +
+      '<div class="stat3"><div class="stat"><b>5</b>alunos na turma</div><div class="stat"><b>6 de 11</b>aulas feitas na semana</div><div class="stat"><b>2</b>bateram a meta</div></div>' +
+      '<h3 class="section-title">Check-ins de hoje</h3>' +
+      '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">hoje, 07:58</span></span></div>' + tags({ ap: 'Reformer', focos: ['Core'] }) +
+      (S.conf ? '<span class="pill pill-good" style="align-self:flex-start">Presença confirmada</span>' : '<button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="presenca">Confirmar presença</button>') + '</div>' +
+      '<h3 class="section-title">Precisam de atenção</h3>' +
+      '<div class="who warn"><div class="row">' + avatar('Renata', false) + '<span><b>Renata</b><br><span class="small muted">Não vem há 9 dias · plano de 2 aulas por semana</span></span></div><span class="small">2 reposições pendentes</span><div class="wrap">' +
+      act('r1', 'Mandar incentivo', 'No app, a Renata receberia o seu incentivo.') + act('r2', 'Sugerir reposição', 'No app, a Renata receberia horários para repor.') + '</div></div>' +
+      '<div class="who warn"><div class="row">' + avatar('Jô', false) + '<span><b>Jô</b><br><span class="small muted">1 de 3 aulas nesta semana · faltou na quarta</span></span></div><span class="small">1 reposição pendente</span><div class="wrap">' +
+      act('j1', 'Sugerir reposição', 'No app, a Jô receberia horários para repor.') + '</div></div>' +
+      '<h3 class="section-title">Em dia</h3>' +
+      '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">2 de 2 aulas · sequência de 6 semanas</span></span></div></div>' +
+      '<div class="who"><div class="row">' + avatar('Paula', false) + '<span><b>Paula</b><br><span class="small muted">2 de 2 aulas · sequência de 2 semanas</span></span></div></div>' +
+      '<div class="who"><div class="row">' + avatar('Lu', false) + '<span><b>Lu</b><br><span class="small muted">1 de 2 aulas · próxima aula amanhã, 7h</span></span></div></div>' +
+      '<p class="small muted center">O painel faria parte do plano para instrutoras e estúdios.</p></div>';
+  },
+
   perfil: () => header('Perfil', 'inicio') + '<div class="body grow"><div class="row">' + avatar(S.user.name, true) + '<span><b>' + esc(S.user.name) + '</b><br><span class="muted">@' + esc(S.user.handle) + '</span></span></div>' +
     '<div class="card"><b>Meta semanal</b>' + stepper(S.user.goal) + '<p class="small muted" style="margin:0">No app, a nova meta vale a partir da próxima semana.</p></div>' +
     '<div class="grow"></div><button type="button" class="btn" data-a="logout">Sair da conta</button></div>'
@@ -247,7 +320,8 @@ function render() { document.getElementById('app').innerHTML = V[S.screen](); }
 const A = {
   go: el => go(el.dataset.to),
   login: () => go('cadastro'),
-  demo: () => { S.user = { name: 'Lu', handle: 'lu.pilates', goal: 2 }; S.week = 1; S.streak = 3; S.me = { aulas: 5, metas: 2 }; S.groups = [demoGroup()]; go('inicio'); },
+  demo: () => { S.user = { name: 'Lu', handle: 'lu.pilates', goal: 2 }; S.week = 1; S.streak = 3; S.me = { aulas: 5, metas: 2 }; S.groups = [demoGroup()];
+    S.hist = { Reformer: 3, Cadillac: 1, Chair: 0, Barrel: 0, Solo: 1 }; S.pain = [4, 4, 3, 3, 2]; S.cem = true; go('inicio'); },
   goal: el => { const d = Number(el.dataset.d);
     if (S.screen === 'perfil') { S.user.goal = Math.min(7, Math.max(1, S.user.goal + d)); document.getElementById('goal-out').textContent = S.user.goal; }
     else { S.draftGoal = Math.min(7, Math.max(1, S.draftGoal + d)); document.getElementById('goal-out').textContent = S.draftGoal; } },
@@ -270,6 +344,12 @@ const A = {
   tab: el => { S.tab = el.dataset.t; render(); },
   copy: () => { const c = group().code; const ok = () => toast('Código ' + c + ' copiado.');
     try { navigator.clipboard.writeText(c).then(ok, () => toast('Código do grupo: ' + c)); } catch (e) { toast('Código do grupo: ' + c); } },
+  ap: el => keep(() => { S.ap = S.ap === el.dataset.v ? null : el.dataset.v; }),
+  foco: el => keep(() => { const v = el.dataset.v; S.focos = S.focos.includes(v) ? S.focos.filter(f => f !== v) : S.focos.concat([v]); }),
+  pain: el => { S.pain.push(Number(el.dataset.v)); render(); toast('Registro adicionado.'); },
+  instrutora: () => go('painel'),
+  presenca: () => { S.conf = true; render(); toast('Presença da Marina confirmada.'); },
+  nudge: el => { S.nudged[el.dataset.k] = true; render(); toast(el.dataset.msg); },
   pick: () => document.getElementById('f-photo').click(),
   sample: () => setPhoto('sample'),
   confirm: () => { const note = document.getElementById('f-note').value.trim(); const btn = document.getElementById('btn-confirm'); const up = document.getElementById('up');
@@ -277,13 +357,15 @@ const A = {
     setTimeout(() => { const before = S.groups.length ? myPos(S.groups[0]) : 0;
       S.week += 1; S.me.aulas += 1; S.done = true; const bonus = S.week === S.user.goal;
       if (bonus) { S.me.metas += 1; S.streak += 1; }
-      S.groups.forEach(g => g.feed.unshift({ who: 'me', when: 'agora', note, photo: S.photo }));
+      S.groups.forEach(g => g.feed.unshift({ who: 'me', when: 'agora', note, photo: S.photo, ap: S.ap, focos: S.focos }));
+      if (S.ap) S.hist[S.ap] += 1;
       const after = S.groups.length ? myPos(S.groups[0]) : 0;
       S.last = { bonus, msg: after && after < before ? 'Você subiu para o ' + after + 'º lugar em ' + esc(S.groups[0].name) + '.' : '' };
-      S.photo = null; go('feito'); }, 1300); },
+      S.photo = null; S.ap = null; S.focos = []; go('feito'); }, 1300); },
   logout: () => reset()
 };
-function setPhoto(src) { const note = document.getElementById('f-note').value; S.photo = src; render(); document.getElementById('f-note').value = note; }
+function keep(fn) { const n = document.getElementById('f-note'); const note = n ? n.value : ''; const y = document.getElementById('app').scrollTop; fn(); render(); const m = document.getElementById('f-note'); if (m) m.value = note; document.getElementById('app').scrollTop = y; }
+function setPhoto(src) { keep(() => { S.photo = src; }); }
 
 document.getElementById('app').addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (el && !el.disabled && A[el.dataset.a]) A[el.dataset.a](el); });
 document.getElementById('app').addEventListener('change', e => { if (e.target.id === 'f-photo' && e.target.files && e.target.files[0]) setPhoto(URL.createObjectURL(e.target.files[0])); });
