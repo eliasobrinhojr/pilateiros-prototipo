@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protótipo Pilateiros</title>
+<title>Protótipo Pilatei</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Sora:wght@600;700&display=swap">
 <style>
 :root {
@@ -320,7 +320,7 @@ const wline = w => w ? '<span class="small muted wline">' + IC.watch + wtxt(w) +
 const stepper = v => '<div class="stepper"><button type="button" data-a="goal" data-d="-1" aria-label="Diminuir meta">−</button><output id="goal-out">' + v + '</output><button type="button" data-a="goal" data-d="1" aria-label="Aumentar meta">+</button><span class="muted">aulas por semana</span></div>';
 
 const V = {
-  entrar: () => '<div class="hero"><p class="pill" style="align-self:flex-start">Para quem não falta ao pilates</p><h1 class="brand">Pila<span>teiros</span></h1><p class="muted">Registre cada aula, mantenha a sequência e dispute o ranking com a sua turma.</p></div>' +
+  entrar: () => '<div class="hero"><p class="pill" style="align-self:flex-start">Pilates sem falta</p><h1 class="brand" style="display:flex;align-items:center;gap:12px;letter-spacing:-0.03em"><svg viewBox="0 0 640 440" width="58" role="img" aria-label="Símbolo do Pilatei"><path d="M145 235 L295 385 L585 55" fill="none" stroke="#6A3FCB" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"/><circle cx="56" cy="146" r="56" fill="#FFB52E"/></svg>pilatei</h1><p class="muted">Registre cada aula, mantenha a sequência e dispute o ranking com a sua turma.</p></div>' +
     '<div class="body"><button type="button" class="btn btn-dark" data-a="login">Entrar com Google</button><button type="button" class="btn" data-a="login">Entrar com Apple</button><button type="button" class="link" data-a="demo">Já tenho conta: ver o app em uso</button><button type="button" class="link" data-a="instrutora">Sou instrutora: ver o painel da turma</button><p class="small muted center">O login é simulado neste protótipo.</p></div>',
 
   cadastro: () => header('Primeiro acesso', 'entrar') + '<div class="body grow">' +
