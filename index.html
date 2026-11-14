@@ -98,6 +98,7 @@ button { cursor: pointer; }
 .progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 1.1s ease; }
 
 .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--tint); border-radius: 14px; padding: 4px; }
+.tabs.three { grid-template-columns: 1fr 1fr 1fr; }
 .tab { border: none; background: none; border-radius: 10px; padding: 10px; font-weight: 600; color: var(--muted); }
 .tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(43, 24, 64, 0.12); }
 .post { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
@@ -162,7 +163,7 @@ button { cursor: pointer; }
       <li>Entre em um grupo com o código <code>PILA7</code>, ou crie o seu.</li>
       <li>Faça um check-in com foto, aparelho e foco, e veja a sequência e o ranking mudarem.</li>
       <li>Abra “Minha evolução” e “Desafios” no início.</li>
-      <li>Em “Sou instrutora”, crie um desafio. Depois entre como aluna e veja o desafio na turma.</li>
+      <li>Em “Sou instrutora”, abra a aba “Desafios” e crie um desafio. Depois entre como aluna e veja o desafio na turma.</li>
     </ol>
     <p>No celular, o protótipo ocupa a tela inteira.</p>
   </aside>
@@ -190,6 +191,7 @@ function demoGroup() {
 }
 function reset(keep) {
   if (!keep) { CREATED = []; RULE = { h: 3, d: 21 }; }
+  PTAB = 'turma';
   S = { screen: 'entrar', user: null, draftGoal: 2, week: 0, streak: 0, done: false, me: { aulas: 0, metas: 0 }, groups: [], gid: null, tab: 'feed', photo: null, joinMode: 'entrar', err: '', last: null,
     ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {}, days: [], repo: 0, nd: null,
     challenges: baseChallenges().concat(CREATED.map(c => Object.assign({}, c, { joined: false, start: 0, n: 0, sent: false, ok: false }))) };
@@ -208,7 +210,7 @@ const TPL = {
 };
 const POOL = ['Aula no Reformer', 'Aula no Cadillac', 'Aula na Chair', 'Aula no Barrel', 'Aula no solo', 'Aula antes das 8h', 'Trazer um amigo', 'Registrar a evolução', 'Bater a meta da semana'];
 const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-let CREATED = [], RULE = { h: 3, d: 21 };
+let CREATED = [], RULE = { h: 3, d: 21 }, PTAB = 'turma';
 function baseChallenges() {
   return [
     { id: 'c1', kind: 'frequencia', name: '8 aulas em novembro', desc: 'Complete 8 aulas até o fim do mês.', target: 8, ends: 'termina em 30 de novembro', reward: 'Selo do mês e sorteio de uma meia antiderrapante', joined: true, stat: '4 de 5 alunos participando · 1 já concluiu' },
@@ -357,7 +359,8 @@ const V = {
     const act = (k, label, msg) => '<button type="button" class="btn btn-sm" data-a="nudge" data-k="' + k + '" data-msg="' + msg + '"' + (done(k) ? ' disabled' : '') + '>' + (done(k) ? 'Feito' : label) + '</button>';
     return '<div class="top"><button type="button" class="icon-btn" data-a="logout" aria-label="Voltar">' + IC.back + '</button><h2>Turma das 7h<br><span class="small muted" style="font-family:var(--font-body);font-weight:400">Painel da instrutora</span></h2></div><div class="body">' +
       '<div class="stat3"><div class="stat"><b>5</b>alunos na turma</div><div class="stat"><b>6 de 11</b>aulas feitas na semana</div><div class="stat"><b>2</b>bateram a meta</div></div>' +
-      '<h3 class="section-title">Check-ins de hoje</h3>' +
+      '<div class="tabs three" role="tablist">' + [['turma', 'Turma'], ['desafios', 'Desafios'], ['regras', 'Reposição']].map(t => '<button type="button" class="tab" role="tab" aria-selected="' + (PTAB === t[0]) + '" data-a="ptab" data-t="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>' +
+      (PTAB === 'turma' ? '<h3 class="section-title">Check-ins de hoje</h3>' +
       '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">hoje, 07:58</span></span></div>' + tags({ ap: 'Reformer', focos: ['Core'] }) +
       '<div class="wrap" style="align-items:center">' + (S.conf ? '<span class="pill pill-good">Presença confirmada</span>' : '<button type="button" class="btn btn-sm" data-a="presenca">Confirmar presença</button>') + act('c1', 'Elogiar no feed', 'No app, a Marina veria o seu comentário no feed.') + '</div></div>' +
       '<h3 class="section-title">Precisam de atenção</h3>' +
@@ -368,14 +371,17 @@ const V = {
       '<h3 class="section-title">Em dia</h3>' +
       '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">2 de 2 aulas · sequência de 6 semanas</span></span></div></div>' +
       '<div class="who"><div class="row">' + avatar('Paula', false) + '<span><b>Paula</b><br><span class="small muted">2 de 2 aulas · sequência de 2 semanas</span></span></div></div>' +
-      '<div class="who"><div class="row">' + avatar('Lu', false) + '<span><b>Lu</b><br><span class="small muted">1 de 2 aulas · próxima aula amanhã, 7h</span></span></div></div>' +
-      '<h3 class="section-title">Desafios da turma</h3>' +
-      S.challenges.map(c => '<div class="who"><div class="row"><span class="pill">' + KIND[c.kind] + '</span><span class="grow"></span><span class="small muted">' + c.ends + '</span></div><b>' + esc(c.name) + '</b><span class="small muted">' + (c.created ? 'Publicado agora · aguardando participantes' : c.stat) + '</span></div>').join('') +
-      '<button type="button" class="btn btn-primary" data-a="ndnew">Criar desafio</button>' +
+      '<div class="who"><div class="row">' + avatar('Lu', false) + '<span><b>Lu</b><br><span class="small muted">1 de 2 aulas · próxima aula amanhã, 7h</span></span></div></div>'
+      : PTAB === 'desafios' ? '<button type="button" class="btn btn-primary" data-a="ndnew">Criar desafio</button>' +
       '<h3 class="section-title">Fotos para confirmar</h3>' +
       '<div class="who"><div class="row">' + avatar('Paula', false) + '<span><b>Paula</b><br><span class="small muted">Teaser no Reformer · enviada hoje</span></span></div><div class="wrap">' + act('p1', 'Confirmar exercício', 'Exercício da Paula confirmado. Ela ganha 30 pontos.') + '</div></div>' +
-      '<h3 class="section-title">Regras de reposição</h3>' +
+      '<h3 class="section-title">Desafios da turma</h3>' +
+      S.challenges.slice().reverse().map(c => '<div class="who"><div class="row"><span class="pill">' + KIND[c.kind] + '</span><span class="grow"></span><span class="small muted">' + c.ends + '</span></div><b>' + esc(c.name) + '</b><span class="small muted">' + (c.created ? 'Publicado agora · aguardando participantes' : c.stat) + '</span></div>').join('')
+      : '<h3 class="section-title">Regras de reposição</h3>' +
       '<div class="card"><span class="small muted">Avisar a falta com antecedência de</span>' + num('rule', 'h', RULE.h, 'horas') + '<span class="small muted">Prazo para repor a aula</span>' + num('rule', 'd', RULE.d, 'dias') + '</div>' +
+      '<h3 class="section-title">Reposições pendentes</h3>' +
+      '<div class="who warn"><div class="row">' + avatar('Renata', false) + '<span><b>Renata</b><br><span class="small muted">2 aulas para repor · a primeira vence em 5 dias</span></span></div><div class="wrap">' + act('r2', 'Sugerir reposição', 'No app, a Renata receberia horários para repor.') + '</div></div>' +
+      '<div class="who warn"><div class="row">' + avatar('Jô', false) + '<span><b>Jô</b><br><span class="small muted">1 aula para repor · vence em 18 dias</span></span></div><div class="wrap">' + act('j1', 'Sugerir reposição', 'No app, a Jô receberia horários para repor.') + '</div></div>') +
       '<p class="small muted center">O painel faria parte do plano para instrutoras e estúdios.</p></div>';
   },
 
@@ -434,7 +440,8 @@ const A = {
   ap: el => keep(() => { S.ap = S.ap === el.dataset.v ? null : el.dataset.v; }),
   foco: el => keep(() => { const v = el.dataset.v; S.focos = S.focos.includes(v) ? S.focos.filter(f => f !== v) : S.focos.concat([v]); }),
   pain: el => { S.pain.push(Number(el.dataset.v)); render(); toast('Registro adicionado.'); },
-  instrutora: () => go('painel'),
+  instrutora: () => { PTAB = 'turma'; go('painel'); },
+  ptab: el => { PTAB = el.dataset.t; render(); },
   presenca: () => { S.conf = true; render(); toast('Presença da Marina confirmada.'); },
   nudge: el => { S.nudged[el.dataset.k] = true; render(); toast(el.dataset.msg); },
   pick: () => document.getElementById('f-photo').click(),
@@ -471,7 +478,7 @@ const A = {
     const ap = d.ap ? (d.ap === 'Chair' ? ' na Chair' : d.ap === 'Solo' ? ' no solo' : ' no ' + d.ap) : '';
     const desc = { frequencia: 'Complete ' + d.target + ' aulas' + ap + ' em ' + d.days + ' dias.', sequencia: 'Bata a sua meta por ' + d.target + ' semanas seguidas.', exercicio: 'Faça ' + d.ex + ap + ' em aula e envie a foto. A instrutora confirma.', cartela: 'Complete os ' + d.items.length + ' itens da cartela.', coletivo: 'Cada aula de cada aluno conta para a meta de ' + d.target + ' aulas da turma.' }[d.kind];
     const c = { id: 'n' + (CREATED.length + 1), kind: d.kind, name: d.name, desc, target: d.kind === 'exercicio' ? 1 : d.target, items: d.items.slice(), ap: d.kind === 'frequencia' ? d.ap : null, ends: 'termina em ' + d.days + ' dias', reward: d.reward || 'Selo', joined: false, created: true };
-    CREATED.push(c); S.challenges.push(c); go('painel'); toast('Desafio publicado para a Turma das 7h.'); },
+    CREATED.push(c); S.challenges.push(c); PTAB = 'desafios'; go('painel'); toast('Desafio publicado para a Turma das 7h.'); },
   logout: () => reset(true)
 };
 function keep(fn) { const n = document.getElementById('f-note'); const note = n ? n.value : ''; const y = document.getElementById('app').scrollTop; fn(); render(); const m = document.getElementById('f-note'); if (m) m.value = note; document.getElementById('app').scrollTop = y; }
