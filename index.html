@@ -142,6 +142,9 @@ button { cursor: pointer; }
 .msg.me .when { color: #E9DFF7; }
 .send { position: sticky; bottom: 0; display: flex; gap: 8px; padding: 10px 0 6px; background: var(--surface); }
 .send input, .cbox input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; background: var(--surface); }
+.scrim { position: absolute; inset: 0; background: rgba(43, 24, 64, 0.45); z-index: 5; border: none; padding: 0; width: 100%; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 80%; overflow-y: auto; background: var(--surface); border-radius: 24px 24px 0 0; padding: 18px 20px 0; display: flex; flex-direction: column; gap: 10px; z-index: 6; box-shadow: 0 -8px 30px rgba(43, 24, 64, 0.2); }
+.sheet .foot { position: sticky; bottom: 0; background: var(--surface); padding: 10px 0 18px; }
 .cbox { display: flex; gap: 8px; }
 .cmts { display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
 .cmts p { margin: 0; overflow-wrap: anywhere; }
@@ -177,7 +180,7 @@ button { cursor: pointer; }
       <li>Entre em um grupo com o código <code>PILA7</code>, ou crie o seu.</li>
       <li>Faça um check-in com foto, aparelho e foco, e veja a sequência e o ranking mudarem.</li>
       <li>Abra “Minha evolução” e “Desafios” no início.</li>
-      <li>No check-in, toque em “Importar do relógio” e marque acessórios e como se sentiu. No feed, aplauda e comente as fotos.</li>
+      <li>No check-in, toque em “Importar do relógio”, escolha os acessórios e marque como se sentiu. No feed, aplauda e comente as fotos.</li>
       <li>Veja a “Pose do dia” no início e a aba “Conversa” dentro da turma.</li>
       <li>Em “Sou instrutora”, abra a aba “Desafios” e crie um desafio. Depois entre como aluna e veja o desafio na turma.</li>
     </ol>
@@ -204,7 +207,7 @@ let S, toastTimer;
 function demoGroup() {
   return { id: 'g1', name: 'Turma das 7h', code: 'PILA7',
     members: [ { name: 'Marina', aulas: 8, metas: 3 }, { name: 'Paula', aulas: 6, metas: 2 }, { name: 'Jô', aulas: 5, metas: 1 }, { name: 'Renata', aulas: 3, metas: 0 } ],
-    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12, ap: 'Reformer', focos: ['Core'], acc: ['Bola'], feel: 'Com energia', w: { min: 55, kcal: 230, bpm: 118 }, claps: 3, comments: [{ who: 'Paula', text: 'Arrasou!' }] }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205, ap: 'Solo', focos: ['Mobilidade'], acc: ['Rolo'], claps: 1, comments: [] }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150, ap: 'Cadillac', focos: ['Postura', 'Flexibilidade'], feel: 'Desafio bom', claps: 4, comments: [{ who: 'Marina', text: 'Parabéns pela série de cem!' }], coach: 'Série de cem com ótimo controle hoje.' } ],
+    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12, ap: 'Reformer', focos: ['Core'], acc: ['Overball'], feel: 'Com energia', w: { min: 55, kcal: 230, bpm: 118 }, claps: 3, comments: [{ who: 'Paula', text: 'Arrasou!' }] }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205, ap: 'Solo', focos: ['Mobilidade'], acc: ['Rolo de espuma'], claps: 1, comments: [] }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150, ap: 'Cadillac', focos: ['Postura', 'Flexibilidade'], feel: 'Desafio bom', claps: 4, comments: [{ who: 'Marina', text: 'Parabéns pela série de cem!' }], coach: 'Série de cem com ótimo controle hoje.' } ],
     chat: [ { who: 'Carla', coach: true, when: 'ontem, 18:02', text: 'Pessoal, na quinta a aula das 7h começa 10 minutos mais cedo.' }, { who: 'Marina', when: 'ontem, 18:10', text: 'Combinado, estarei lá.' },
       { who: 'Paula', when: 'hoje, 08:12', text: 'Quem topa o desafio do teaser esta semana?' }, { who: 'Jô', when: 'hoje, 08:20', text: 'Eu topo. E vou repor a aula de quarta na sexta.' } ] };
 }
@@ -212,7 +215,7 @@ function reset(keep) {
   if (!keep) { CREATED = []; RULE = { h: 3, d: 21 }; POSE = 0; }
   PTAB = 'turma';
   S = { screen: 'entrar', user: null, draftGoal: 2, week: 0, streak: 0, done: false, me: { aulas: 0, metas: 0 }, groups: [], gid: null, tab: 'feed', photo: null, joinMode: 'entrar', err: '', last: null,
-    ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {}, days: [], repo: 0, nd: null, pose: { done: false, posted: false }, pstreak: 0, poseOpen: false, replied: false, acc: [], feel: null, watch: null, watchShow: true, wconn: false, whint: false, wlog: [], acch: {}, feelh: {},
+    ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {}, days: [], repo: 0, nd: null, pose: { done: false, posted: false }, pstreak: 0, poseOpen: false, replied: false, acc: [], sheet: false, feel: null, watch: null, watchShow: true, wconn: false, whint: false, wlog: [], acch: {}, feelh: {},
     challenges: baseChallenges().concat(CREATED.map(c => Object.assign({}, c, { joined: false, start: 0, n: 0, sent: false, ok: false }))) };
   render();
 }
@@ -302,7 +305,13 @@ function go(screen) { S.screen = screen; S.err = ''; render(); document.getEleme
 const avatar = (name, me) => '<span class="avatar" style="background:' + (me ? 'var(--accent)' : (COLORS[name] || '#6B5C7D')) + '">' + esc(name.charAt(0).toUpperCase()) + '</span>';
 const header = (title, back) => '<div class="top"><button type="button" class="icon-btn" data-a="go" data-to="' + back + '" aria-label="Voltar">' + IC.back + '</button><h2>' + title + '</h2></div>';
 const chip = (a, v, on) => '<button type="button" class="chip" aria-pressed="' + on + '" data-a="' + a + '" data-v="' + v + '">' + v + '</button>';
-const ACESS = ['Bola', 'Faixa elástica', 'Anel', 'Rolo', 'Halteres', 'Bosu'];
+const ACG = [['Bolas', ['Bola suíça', 'Overball', 'Bola feijão', 'Bola com peso', 'Bolinha de massagem']], ['Elásticos e anel', ['Faixa elástica', 'Mini band', 'Anel de pilates']],
+  ['Pesos', ['Halteres', 'Caneleira', 'Bastão']], ['Equilíbrio', ['Disco de equilíbrio', 'Bosu', 'Prancha de equilíbrio']], ['Apoio e alongamento', ['Rolo de espuma', 'Meia-lua', 'Caixa', 'Bloco', 'Roda']]];
+const ACESS = ACG.reduce((l, g) => l.concat(g[1]), []);
+const accQuick = () => { const rec = Object.keys(S.acch).sort((a, b) => S.acch[b] - S.acch[a]); return ACESS.filter(a => S.acc.includes(a)).concat(rec.filter(a => !S.acc.includes(a)).slice(0, 3)); };
+const accSheet = () => '<button type="button" class="scrim" data-a="accclose" aria-label="Fechar a lista de acessórios"></button><div class="sheet" id="sheet" role="dialog" aria-label="Acessórios da aula"><div class="row"><b>Acessórios da aula</b><span class="grow"></span><button type="button" class="link" style="padding:0" data-a="accclear">Limpar</button></div>' +
+  ACG.map(g => '<span class="small muted">' + g[0] + '</span><div class="chips">' + g[1].map(a => chip('acc', a, S.acc.includes(a))).join('') + '</div>').join('') +
+  '<div class="foot"><button type="button" class="btn btn-primary" data-a="accclose">Concluir' + (S.acc.length ? ' (' + S.acc.length + ')' : '') + '</button></div></div>';
 const FEEL = ['Com energia', 'Leve', 'Desafio bom', 'Cansaço', 'Desconforto'];
 const WSAMPLE = { min: 55, kcal: 212, bpm: 112 };
 const tags = p => { const t = (p.ap ? [p.ap] : []).concat(p.acc || [], p.focos || [], p.feel ? ['Senti: ' + p.feel.toLowerCase()] : []); return t.length ? '<div class="tags">' + t.map(x => '<span class="tag">' + x + '</span>').join('') + '</div>' : ''; };
@@ -346,12 +355,13 @@ const V = {
         '<div class="chips">' + chip('wshow', 'Mostrar no post', S.watchShow) + '</div><span class="small muted">As calorias são uma estimativa do relógio.</span></div>'
       : '<div class="card"><span class="wline">' + IC.watch + '<b>Relógio</b></span><span class="small muted">Traga a duração, as calorias e os batimentos do treino.</span><button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="wimport">Importar do relógio</button></div>') +
     '<div class="field"><b>Aparelho</b><div class="chips">' + APS.map(a => chip('ap', a, S.ap === a)).join('') + '</div></div>' +
-    '<div class="field"><b>Acessórios (opcional)</b><div class="chips">' + ACESS.map(a => chip('acc', a, S.acc.includes(a))).join('') + '</div></div>' +
+    '<div class="field"><b>Acessórios (opcional)</b>' + (accQuick().length ? '<div class="chips">' + accQuick().map(a => chip('acc', a, S.acc.includes(a))).join('') + '</div>' : '') +
+      '<button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="accopen">' + (accQuick().length ? 'Ver todos os acessórios' : 'Escolher acessórios') + '</button></div>' +
     '<div class="field"><b>Foco da aula</b><div class="chips">' + FOCOS.map(f => chip('foco', f, S.focos.includes(f))).join('') + '</div></div>' +
     '<div class="field"><b>Como você se sentiu na aula?</b><div class="chips">' + FEEL.map(f => chip('feel', f, S.feel === f)).join('') + '</div></div>' +
     '<div class="field"><label for="f-note">Nota (opcional)</label><textarea id="f-note" maxlength="140" placeholder="Como foi a aula?"></textarea></div>' +
     '<div class="progress" id="up" hidden><i></i></div><div class="grow"></div>' +
-    '<button type="button" class="btn btn-primary" data-a="confirm" id="btn-confirm"' + (S.photo ? '' : ' disabled') + '>Confirmar check-in</button></div>',
+    '<button type="button" class="btn btn-primary" data-a="confirm" id="btn-confirm"' + (S.photo ? '' : ' disabled') + '>Confirmar check-in</button></div>' + (S.sheet ? accSheet() : ''),
 
   feito: () => {
     const l = S.last;
@@ -426,7 +436,7 @@ const V = {
       '<div class="stat3"><div class="stat"><b>5</b>alunos na turma</div><div class="stat"><b>6 de 11</b>aulas feitas na semana</div><div class="stat"><b>2</b>bateram a meta</div></div>' +
       '<div class="tabs three" role="tablist">' + [['turma', 'Turma'], ['desafios', 'Desafios'], ['regras', 'Reposição']].map(t => '<button type="button" class="tab" role="tab" aria-selected="' + (PTAB === t[0]) + '" data-a="ptab" data-t="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>' +
       (PTAB === 'turma' ? '<h3 class="section-title">Check-ins de hoje</h3>' +
-      '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">hoje, 07:58</span></span></div>' + tags({ ap: 'Reformer', focos: ['Core'], acc: ['Bola'], feel: 'Com energia' }) + wline({ min: 55, kcal: 230, bpm: 118 }) +
+      '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">hoje, 07:58</span></span></div>' + tags({ ap: 'Reformer', focos: ['Core'], acc: ['Overball'], feel: 'Com energia' }) + wline({ min: 55, kcal: 230, bpm: 118 }) +
       '<div class="wrap" style="align-items:center">' + (S.conf ? '<span class="pill pill-good">Presença confirmada</span>' : '<button type="button" class="btn btn-sm" data-a="presenca">Confirmar presença</button>') + act('c1', 'Elogiar no feed', 'No app, a Marina veria o seu comentário no feed.') + '</div></div>' +
       '<h3 class="section-title">Precisam de atenção</h3>' +
       '<div class="who warn"><div class="row">' + avatar('Renata', false) + '<span><b>Renata</b><br><span class="small muted">Não vem há 9 dias · plano de 2 aulas por semana</span></span></div><span class="small">2 reposições pendentes</span><div class="wrap">' +
@@ -482,7 +492,7 @@ function render() { document.getElementById('app').innerHTML = V[S.screen](); }
 const A = {
   go: el => go(el.dataset.to),
   login: () => go('cadastro'),
-  demo: () => { S.user = { name: 'Lu', handle: 'lu.pilates', goal: 2 }; S.week = 1; S.streak = 3; S.me = { aulas: 5, metas: 2 }; S.groups = [demoGroup()]; S.pstreak = 2; S.wconn = true; S.whint = true; S.wlog = [{ min: 52, kcal: 198, bpm: 108 }, { min: 55, kcal: 205, bpm: 111 }, { min: 50, kcal: 190, bpm: 109 }]; S.acch = { Bola: 2, 'Faixa elástica': 1 }; S.feelh = { 'Com energia': 3, Leve: 1, 'Desafio bom': 1 };
+  demo: () => { S.user = { name: 'Lu', handle: 'lu.pilates', goal: 2 }; S.week = 1; S.streak = 3; S.me = { aulas: 5, metas: 2 }; S.groups = [demoGroup()]; S.pstreak = 2; S.wconn = true; S.whint = true; S.wlog = [{ min: 52, kcal: 198, bpm: 108 }, { min: 55, kcal: 205, bpm: 111 }, { min: 50, kcal: 190, bpm: 109 }]; S.acch = { 'Bola suíça': 2, 'Faixa elástica': 1 }; S.feelh = { 'Com energia': 3, Leve: 1, 'Desafio bom': 1 };
     S.hist = { Reformer: 3, Cadillac: 1, Chair: 0, Barrel: 0, Solo: 1 }; S.pain = [4, 4, 3, 3, 2]; S.cem = true; S.days = ['Ter', 'Qui']; S.repo = 1; go('inicio'); },
   goal: el => { const d = Number(el.dataset.d);
     if (S.screen === 'perfil') { S.user.goal = Math.min(7, Math.max(1, S.user.goal + d)); document.getElementById('goal-out').textContent = S.user.goal; }
@@ -511,7 +521,10 @@ const A = {
   pain: el => { S.pain.push(Number(el.dataset.v)); render(); toast('Registro adicionado.'); },
   instrutora: () => { PTAB = 'turma'; go('painel'); },
   ptab: el => { PTAB = el.dataset.t; render(); },
-  acc: el => keep(() => { const v = el.dataset.v; S.acc = S.acc.includes(v) ? S.acc.filter(x => x !== v) : S.acc.concat([v]); }),
+  acc: el => sheetKeep(() => { const v = el.dataset.v; S.acc = S.acc.includes(v) ? S.acc.filter(x => x !== v) : S.acc.concat([v]); }),
+  accopen: () => keep(() => { S.sheet = true; }),
+  accclose: () => keep(() => { S.sheet = false; }),
+  accclear: () => sheetKeep(() => { S.acc = []; }),
   feel: el => keep(() => { S.feel = S.feel === el.dataset.v ? null : el.dataset.v; }),
   wimport: () => { const first = !S.wconn; keep(() => { S.watch = Object.assign({}, WSAMPLE); S.wconn = true; }); toast(first ? 'No app, o sistema pediria a sua permissão na primeira vez.' : 'Treino de pilates encontrado no relógio.'); },
   wclear: () => keep(() => { S.watch = null; }),
@@ -545,7 +558,7 @@ const A = {
       S.last = { bonus, w: S.watch, feel: S.feel, msg: after && after < before ? 'Você subiu para o ' + after + 'º lugar em ' + esc(S.groups[0].name) + '.' : '' };
       S.challenges.forEach(c => { if (c.joined && c.kind === 'frequencia' && c.ap && c.ap === S.ap) c.n = (c.n || 0) + 1; });
       S.last.ch = inTurma() ? S.challenges.filter(c => c.joined && (c.kind === 'frequencia' || c.kind === 'coletivo')).map(c => esc(c.name) + ': ' + prog(c) + ' de ' + c.target) : [];
-      S.photo = null; S.ap = null; S.focos = []; S.acc = []; S.feel = null; S.watch = null; S.watchShow = true; S.whint = false; go('feito'); }, 1300); },
+      S.photo = null; S.ap = null; S.focos = []; S.acc = []; S.sheet = false; S.feel = null; S.watch = null; S.watchShow = true; S.whint = false; go('feito'); }, 1300); },
   cjoin: el => { const c = S.challenges.find(x => x.id === el.dataset.id); c.joined = true; if (c.kind === 'frequencia') c.start = S.me.aulas; if (c.kind === 'coletivo') c.start = turmaTotal(); render(); toast('Você entrou no desafio.'); },
   csend: el => { S.challenges.find(x => x.id === el.dataset.id).sent = true; render(); toast('Foto de exemplo enviada para a instrutora.'); },
   cok: el => { const c = S.challenges.find(x => x.id === el.dataset.id); c.ok = true; const p = /pontos/.test(c.reward); if (p) S.me.extra = (S.me.extra || 0) + 30; render(); toast(p ? 'Exercício confirmado: +30 pontos.' : 'Exercício confirmado.'); },
@@ -571,6 +584,7 @@ const A = {
 };
 function keep(fn) { const n = document.getElementById('f-note'); const note = n ? n.value : ''; const y = document.getElementById('app').scrollTop; fn(); render(); const m = document.getElementById('f-note'); if (m) m.value = note; document.getElementById('app').scrollTop = y; }
 function chatRender(v) { render(); const a = document.getElementById('app'), i = document.getElementById('f-msg'); a.scrollTop = a.scrollHeight; if (i) { i.value = v; i.focus(); } }
+function sheetKeep(fn) { const a = document.getElementById('sheet'), y = a ? a.scrollTop : 0; keep(fn); const b = document.getElementById('sheet'); if (b) b.scrollTop = y; }
 function setPhoto(src) { keep(() => { S.photo = src; }); }
 
 document.getElementById('app').addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (el && !el.disabled && A[el.dataset.a]) A[el.dataset.a](el); });
