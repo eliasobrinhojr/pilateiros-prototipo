@@ -9,16 +9,17 @@
 :root {
   /* Layout: um aparelho centralizado no desktop, tela cheia no celular. Tema único, claro. */
   color-scheme: light;
-  --page: #E6EBF1;
-  --surface: #FCFCFD;
-  --tint: #F1F4F8;
-  --ink: #16212E;
-  --muted: #566475;
-  --line: #D9E0E8;
-  --accent: #C8432B;
-  --accent-soft: #FBE6E0;
-  --sun: #F2B134;
+  --page: #E8E0F3;
+  --surface: #FEFDFF;
+  --tint: #F1EBF9;
+  --ink: #2B1840;
+  --muted: #6B5C7D;
+  --line: #E2D8EF;
+  --accent: #6A3FCB;
+  --accent-soft: #E9DFF7;
+  --sun: #FFB52E;
   --good: #1F7A5A;
+  --danger: #B42318;
   --font-display: "Sora", "Trebuchet MS", system-ui, sans-serif;
   --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -30,9 +31,9 @@ button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
 .stage { height: 100%; display: flex; align-items: center; justify-content: center; gap: 40px; padding: 24px; }
-.phone { width: 390px; max-width: 100%; height: min(100%, 800px); background: var(--surface); border-radius: 36px; border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(22, 33, 46, 0.18); display: flex; flex-direction: column; overflow: hidden; position: relative; }
-.proto-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 20px; background: var(--ink); color: #E9EEF4; font-size: 13px; }
-.proto-bar button { background: none; border: 1px solid #56657A; color: #E9EEF4; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+.phone { width: 390px; max-width: 100%; height: min(100%, 800px); background: var(--surface); border-radius: 36px; border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(43, 24, 64, 0.18); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.proto-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 20px; background: var(--ink); color: #F1EBF9; font-size: 13px; }
+.proto-bar button { background: none; border: 1px solid #7A6699; color: #F1EBF9; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
 #app { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 .side { width: 300px; display: flex; flex-direction: column; gap: 12px; }
 .side h1 { font-family: var(--font-display); font-size: 22px; line-height: 1.2; margin: 0; text-wrap: balance; }
@@ -64,18 +65,18 @@ button { cursor: pointer; }
 .field label { font-weight: 600; font-size: 15px; }
 .field input, .field textarea { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--surface); width: 100%; }
 .field textarea { resize: none; min-height: 72px; }
-.error { color: var(--accent); font-size: 14px; font-weight: 600; }
+.error { color: var(--danger); font-size: 14px; font-weight: 600; }
 .stepper { display: flex; align-items: center; gap: 16px; }
 .stepper button { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 22px; font-weight: 600; }
 .stepper output { font-family: var(--font-display); font-size: 28px; min-width: 32px; text-align: center; }
 
 .card { border: 1px solid var(--line); border-radius: 18px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
 .card-dark { background: var(--ink); border-color: var(--ink); color: #F3F6FA; }
-.card-dark .muted { color: #B7C2D0; }
+.card-dark .muted { color: #CFC2E3; }
 .row { display: flex; align-items: center; gap: 12px; }
 .big { font-family: var(--font-display); font-size: 30px; line-height: 1; }
 .dots { display: flex; gap: 8px; }
-.dot { width: 28px; height: 10px; border-radius: 999px; background: #3A495C; }
+.dot { width: 28px; height: 10px; border-radius: 999px; background: #4B3568; }
 .dot.on { background: var(--sun); }
 .streak { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .streak svg { width: 22px; height: 22px; color: var(--sun); }
@@ -98,7 +99,7 @@ button { cursor: pointer; }
 
 .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--tint); border-radius: 14px; padding: 4px; }
 .tab { border: none; background: none; border-radius: 10px; padding: 10px; font-weight: 600; color: var(--muted); }
-.tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(22, 33, 46, 0.12); }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(43, 24, 64, 0.12); }
 .post { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
 .post:last-child { border-bottom: none; }
 .rank { display: grid; grid-template-columns: 32px 40px 1fr auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; }
@@ -126,7 +127,12 @@ button { cursor: pointer; }
 .badge svg { width: 22px; height: 22px; }
 .badge.off { background: var(--tint); color: var(--muted); }
 .who { border: 1px solid var(--line); border-left: 4px solid var(--good); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
-.who.warn { border-left-color: var(--accent); }
+.who.warn { border-left-color: var(--sun); }
+.coach { background: var(--tint); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+.tag.on { background: #DDF1E8; color: var(--good); }
+.num { display: flex; align-items: center; gap: 12px; }
+.num button { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 20px; font-weight: 600; }
+.num output { font-family: var(--font-display); font-size: 22px; min-width: 40px; text-align: center; }
 .btn-sm { width: auto; min-height: 40px; padding: 8px 14px; font-size: 14px; }
 .wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -155,7 +161,8 @@ button { cursor: pointer; }
       <li>Entre e faça o cadastro, ou use “Já tenho conta” para ver o app em uso.</li>
       <li>Entre em um grupo com o código <code>PILA7</code>, ou crie o seu.</li>
       <li>Faça um check-in com foto, aparelho e foco, e veja a sequência e o ranking mudarem.</li>
-      <li>Abra “Minha evolução” no início. Na tela de entrada, “Sou instrutora” mostra o painel da turma.</li>
+      <li>Abra “Minha evolução” e “Desafios” no início.</li>
+      <li>Em “Sou instrutora”, crie um desafio. Depois entre como aluna e veja o desafio na turma.</li>
     </ol>
     <p>No celular, o protótipo ocupa a tela inteira.</p>
   </aside>
@@ -179,15 +186,67 @@ let S, toastTimer;
 function demoGroup() {
   return { id: 'g1', name: 'Turma das 7h', code: 'PILA7',
     members: [ { name: 'Marina', aulas: 8, metas: 3 }, { name: 'Paula', aulas: 6, metas: 2 }, { name: 'Jô', aulas: 5, metas: 1 }, { name: 'Renata', aulas: 3, metas: 0 } ],
-    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12, ap: 'Reformer', focos: ['Core'] }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205, ap: 'Solo', focos: ['Mobilidade'] }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150, ap: 'Cadillac', focos: ['Postura', 'Flexibilidade'] } ] };
+    feed: [ { who: 'Marina', when: 'hoje, 07:58', note: 'Aula de reformer, saí nova.', hue: 12, ap: 'Reformer', focos: ['Core'] }, { who: 'Jô', when: 'ontem, 19:10', note: '', hue: 205, ap: 'Solo', focos: ['Mobilidade'] }, { who: 'Paula', when: 'ontem, 08:05', note: 'Série de cem completa!', hue: 150, ap: 'Cadillac', focos: ['Postura', 'Flexibilidade'], coach: 'Série de cem com ótimo controle hoje.' } ] };
 }
-function reset() {
+function reset(keep) {
+  if (!keep) { CREATED = []; RULE = { h: 3, d: 21 }; }
   S = { screen: 'entrar', user: null, draftGoal: 2, week: 0, streak: 0, done: false, me: { aulas: 0, metas: 0 }, groups: [], gid: null, tab: 'feed', photo: null, joinMode: 'entrar', err: '', last: null,
-    ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {} };
+    ap: null, focos: [], hist: { Reformer: 0, Cadillac: 0, Chair: 0, Barrel: 0, Solo: 0 }, pain: [], cem: false, conf: false, nudged: {}, days: [], repo: 0, nd: null,
+    challenges: baseChallenges().concat(CREATED.map(c => Object.assign({}, c, { joined: false, start: 0, n: 0, sent: false, ok: false }))) };
   render();
 }
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const pts = m => m.aulas * 10 + m.metas * 20;
+const pts = m => m.aulas * 10 + m.metas * 20 + (m.extra || 0);
+const KIND = { frequencia: 'Frequência', sequencia: 'Sequência', exercicio: 'Exercício da semana', cartela: 'Cartela', coletivo: 'Coletivo' };
+const FDESC = { frequencia: 'Cada aluno completa um número de aulas no período.', sequencia: 'Cada aluno bate a própria meta semanal por várias semanas seguidas.', exercicio: 'Um movimento para fazer em aula e registrar com foto. Você confirma.', cartela: 'Uma lista de itens variados para completar no período.', coletivo: 'A turma soma aulas para chegar a uma meta em conjunto.' };
+const TPL = {
+  frequencia: [ { n: 'Mês sem faltas', target: 8, days: 30, reward: 'Selo do mês' }, { n: 'Volta das férias', target: 4, days: 15, reward: '20 pontos extras' } ],
+  sequencia: [ { n: 'Quatro semanas firmes', target: 4, days: 30, reward: 'Selo de constância' } ],
+  exercicio: [ { n: 'Teaser no Reformer', ex: 'Teaser', ap: 'Reformer', days: 7, reward: '30 pontos extras' }, { n: 'Série de cem no solo', ex: 'Série de cem', ap: 'Solo', days: 7, reward: '30 pontos extras' } ],
+  cartela: [ { n: 'Explorador de aparelhos', items: ['Aula no Reformer', 'Aula no Cadillac', 'Aula na Chair', 'Aula no Barrel'], days: 30, reward: 'Selo de explorador' }, { n: 'Cartela da turma', items: ['Aula antes das 8h', 'Trazer um amigo', 'Registrar a evolução', 'Bater a meta da semana'], days: 30, reward: 'Brinde do estúdio' } ],
+  coletivo: [ { n: 'A turma faz 40 aulas', target: 40, days: 30, reward: 'Aulão especial para a turma' } ]
+};
+const POOL = ['Aula no Reformer', 'Aula no Cadillac', 'Aula na Chair', 'Aula no Barrel', 'Aula no solo', 'Aula antes das 8h', 'Trazer um amigo', 'Registrar a evolução', 'Bater a meta da semana'];
+const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+let CREATED = [], RULE = { h: 3, d: 21 };
+function baseChallenges() {
+  return [
+    { id: 'c1', kind: 'frequencia', name: '8 aulas em novembro', desc: 'Complete 8 aulas até o fim do mês.', target: 8, ends: 'termina em 30 de novembro', reward: 'Selo do mês e sorteio de uma meia antiderrapante', joined: true, stat: '4 de 5 alunos participando · 1 já concluiu' },
+    { id: 'c2', kind: 'exercicio', name: 'Teaser no Reformer', desc: 'Faça o movimento em aula e envie a foto. A instrutora confirma.', target: 1, ends: 'termina no domingo', reward: '30 pontos extras', joined: false, stat: '2 fotos enviadas · 1 para confirmar' },
+    { id: 'c3', kind: 'coletivo', name: 'A turma faz 40 aulas no mês', desc: 'Cada aula de cada aluno conta para a meta da turma.', target: 40, ends: 'termina em 30 de novembro', reward: 'Aulão especial para a turma', joined: true, stat: '27 de 40 aulas feitas pela turma' }
+  ];
+}
+const inTurma = () => S.groups.some(g => g.id === 'g1');
+const turmaTotal = () => { const g = S.groups.find(x => x.id === 'g1'); return (g ? g.members.reduce((n, m) => n + m.aulas, 0) : 0) + S.me.aulas; };
+function itemDone(it) {
+  const m = { 'Aula no Reformer': 'Reformer', 'Aula no Cadillac': 'Cadillac', 'Aula na Chair': 'Chair', 'Aula no Barrel': 'Barrel', 'Aula no solo': 'Solo' };
+  if (m[it]) return S.hist[m[it]] > 0;
+  if (it === 'Registrar a evolução') return S.pain.length > 0;
+  if (it === 'Bater a meta da semana') return S.week >= S.user.goal;
+  return false;
+}
+function prog(c) {
+  if (c.kind === 'frequencia') return Math.min(c.target, c.ap ? (c.n || 0) : Math.max(0, S.me.aulas - (c.start || 0)));
+  if (c.kind === 'sequencia') return Math.min(c.target, S.streak);
+  if (c.kind === 'coletivo') return Math.min(c.target, Math.max(0, turmaTotal() - (c.start || 0)));
+  if (c.kind === 'cartela') return c.items.filter(itemDone).length;
+  return c.ok ? 1 : 0;
+}
+function desafioCard(c) {
+  const v = c.joined ? prog(c) : 0, t = c.kind === 'cartela' ? c.items.length : c.target, fin = c.joined && v >= t;
+  const unit = c.kind === 'sequencia' ? ' semanas' : c.kind === 'cartela' ? ' itens' : ' aulas';
+  let mid = '', act = '';
+  if (c.joined && c.kind === 'cartela') mid = '<div class="tags">' + c.items.map(it => '<span class="tag' + (itemDone(it) ? ' on' : '') + '">' + it + '</span>').join('') + '</div>';
+  if (c.joined && c.kind !== 'exercicio') mid += '<div class="bar-row" style="grid-template-columns:1fr auto"><span class="bar"><i style="width:' + Math.round(v / t * 100) + '%"></i></span><b>' + v + ' de ' + t + unit + '</b></div>';
+  if (!c.joined) act = '<button type="button" class="btn btn-sm btn-primary" style="align-self:flex-start" data-a="cjoin" data-id="' + c.id + '">Participar</button>';
+  else if (fin) act = '<span class="pill pill-good" style="align-self:flex-start">' + (c.kind === 'exercicio' ? 'Confirmado pela instrutora' : 'Concluído') + '</span>';
+  else if (c.kind === 'exercicio') act = c.sent ? '<span class="pill" style="align-self:flex-start">Aguardando a instrutora</span><button type="button" class="link" style="align-self:flex-start;padding:0" data-a="cok" data-id="' + c.id + '">Simular a confirmação da instrutora</button>'
+    : '<button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="csend" data-id="' + c.id + '">' + IC.cam + 'Enviar foto do exercício</button>';
+  return '<div class="card"><div class="row"><span class="pill">' + KIND[c.kind] + '</span><span class="grow"></span><span class="small muted">' + c.ends + '</span></div><b>' + esc(c.name) + '</b><span class="small muted">' + esc(c.desc) + '</span>' + mid + '<span class="small"><b>Prêmio:</b> ' + esc(c.reward) + '</span>' + act + '</div>';
+}
+const num = (a, k, v, label) => '<div class="num"><button type="button" data-a="' + a + '" data-k="' + k + '" data-d="-1" aria-label="Diminuir">−</button><output>' + v + '</output><button type="button" data-a="' + a + '" data-k="' + k + '" data-d="1" aria-label="Aumentar">+</button><span class="muted">' + label + '</span></div>';
+function ndSync() { const d = S.nd; ['cname:name', 'ex:ex', 'reward:reward'].forEach(x => { const a = x.split(':'), el = document.getElementById('f-' + a[0]); if (el) d[a[1]] = el.value.trim(); }); }
+function nd(fn) { ndSync(); fn(); S.err = ''; const y = document.getElementById('app').scrollTop; render(); document.getElementById('app').scrollTop = y; }
 const group = () => S.groups.find(g => g.id === S.gid);
 function ranking(g) {
   return g.members.map(m => ({ name: m.name, aulas: m.aulas, p: pts(m), me: false }))
@@ -201,7 +260,7 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 function go(screen) { S.screen = screen; S.err = ''; render(); document.getElementById('app').scrollTop = 0; }
-const avatar = (name, me) => '<span class="avatar" style="background:' + (me ? 'var(--accent)' : (COLORS[name] || '#566475')) + '">' + esc(name.charAt(0).toUpperCase()) + '</span>';
+const avatar = (name, me) => '<span class="avatar" style="background:' + (me ? 'var(--accent)' : (COLORS[name] || '#6B5C7D')) + '">' + esc(name.charAt(0).toUpperCase()) + '</span>';
 const header = (title, back) => '<div class="top"><button type="button" class="icon-btn" data-a="go" data-to="' + back + '" aria-label="Voltar">' + IC.back + '</button><h2>' + title + '</h2></div>';
 const chip = (a, v, on) => '<button type="button" class="chip" aria-pressed="' + on + '" data-a="' + a + '" data-v="' + v + '">' + v + '</button>';
 const tags = p => (p.ap || (p.focos && p.focos.length)) ? '<div class="tags">' + (p.ap ? '<span class="tag">' + p.ap + '</span>' : '') + (p.focos || []).map(f => '<span class="tag">' + f + '</span>').join('') + '</div>' : '';
@@ -225,13 +284,15 @@ const V = {
       '<div class="card card-dark"><span class="small muted">Esta semana</span><div class="row"><span class="big">' + S.week + ' de ' + S.user.goal + '</span><span class="muted">aulas</span></div><div class="dots">' + dots + '</div>' +
       '<div class="streak">' + IC.flame + (S.streak ? S.streak + (S.streak === 1 ? ' semana seguida' : ' semanas seguidas') + ' batendo a meta' : 'Bata a meta para começar a sequência') + '</div></div>' +
       (S.done ? '<button type="button" class="btn" disabled>' + IC.check + 'Feito hoje</button>' : '<button type="button" class="btn btn-primary" data-a="go" data-to="checkin">' + IC.cam + 'Fazer check-in</button>') +
-      '<button type="button" class="btn" data-a="go" data-to="evolucao">Minha evolução</button>' +
+      '<div class="two"><button type="button" class="btn" data-a="go" data-to="evolucao">Minha evolução</button><button type="button" class="btn" data-a="go" data-to="desafios">Desafios' + (inTurma() ? ' (' + S.challenges.length + ')' : '') + '</button></div>' +
+      (S.days.length ? '<div class="card"><span class="small muted">Suas aulas</span><b>' + S.days.join(', ') + ', às 7h</b>' + (S.repo ? '<span class="small">1 reposição disponível · vence em 12 dias</span><button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="repor">Ver horários para repor</button>' : '<span class="small muted">Lembrete 2 horas antes de cada aula.</span>') + '</div>'
+        : '<button type="button" class="group-row" data-a="go" data-to="perfil"><span><b>Defina os seus dias de aula</b><br><span class="small muted">O app lembra antes da aula e avisa das reposições.</span></span><span class="chev">' + IC.chev + '</span></button>') +
       '<h3 class="section-title">Seus grupos</h3>' + groups +
       '<div class="two"><button type="button" class="btn" data-a="join" data-m="criar">Criar grupo</button><button type="button" class="btn" data-a="join" data-m="entrar">Tenho um código</button></div></div>';
   },
 
   checkin: () => header('Check-in de hoje', 'inicio') + '<div class="body grow">' +
-    '<div class="photo' + (S.photo === 'sample' ? ' sample" style="background:linear-gradient(135deg,#C8432B,#F2B134)' : '') + '" id="photo-box">' + (S.photo && S.photo !== 'sample' ? '<img src="' + S.photo + '" alt="Foto escolhida para o check-in">' : S.photo === 'sample' ? IC.cam : '<span class="center">' + IC.cam + '<br>A foto é obrigatória</span>') + '</div>' +
+    '<div class="photo' + (S.photo === 'sample' ? ' sample" style="background:linear-gradient(135deg,#6A3FCB,#FFB52E)' : '') + '" id="photo-box">' + (S.photo && S.photo !== 'sample' ? '<img src="' + S.photo + '" alt="Foto escolhida para o check-in">' : S.photo === 'sample' ? IC.cam : '<span class="center">' + IC.cam + '<br>A foto é obrigatória</span>') + '</div>' +
     '<input type="file" accept="image/*" id="f-photo" class="file" tabindex="-1">' +
     '<div class="two"><button type="button" class="btn" data-a="pick">Tirar ou escolher</button><button type="button" class="btn" data-a="sample">Foto de exemplo</button></div>' +
     '<div class="field"><b>Aparelho</b><div class="chips">' + APS.map(a => chip('ap', a, S.ap === a)).join('') + '</div></div>' +
@@ -245,6 +306,7 @@ const V = {
     return '<div class="hero center" style="align-items:center"><span class="avatar" style="background:var(--good);width:72px;height:72px">' + IC.check.replace('aria-hidden', 'width="36" height="36" aria-hidden') + '</span><h1 class="brand" style="font-size:28px">Check-in feito!</h1>' +
       '<p><span class="pill pill-good">+10 pontos pela aula</span></p>' + (l.bonus ? '<p><span class="pill pill-good">+20 de bônus: meta da semana batida</span></p>' : '') +
       '<p class="muted">' + S.week + ' de ' + S.user.goal + ' aulas nesta semana' + (S.streak ? ' · sequência de ' + S.streak + (S.streak === 1 ? ' semana' : ' semanas') : '') + '</p>' +
+      (l.ch && l.ch.length ? '<p class="small muted">' + l.ch.join('<br>') + '</p>' : '') +
       (l.msg ? '<p><b>' + l.msg + '</b></p>' : '') + '</div><div class="body"><button type="button" class="btn btn-primary" data-a="go" data-to="inicio">Voltar ao início</button>' +
       (S.groups.length ? '<button type="button" class="btn" data-a="open" data-id="' + S.groups[0].id + '">Ver no grupo</button>' : '') + '</div>';
   },
@@ -253,8 +315,8 @@ const V = {
     const g = group();
     const feed = g.feed.length ? g.feed.map(p => { const me = p.who === 'me'; const name = me ? S.user.name : p.who;
       return '<article class="post"><div class="row">' + avatar(name, me) + '<span><b>' + esc(name) + (me ? ' (você)' : '') + '</b><br><span class="small muted">' + p.when + '</span></span></div>' +
-        '<div class="photo sample" style="background:' + (p.photo && p.photo !== 'sample' ? 'var(--tint)' : p.photo === 'sample' ? 'linear-gradient(135deg,#C8432B,#F2B134)' : 'linear-gradient(135deg,hsl(' + p.hue + ' 45% 42%),hsl(' + (p.hue + 40) + ' 55% 62%))') + '">' + (p.photo && p.photo !== 'sample' ? '<img src="' + p.photo + '" alt="Foto do check-in">' : IC.cam) + '</div>' +
-        tags(p) + (p.note ? '<p style="margin:0">' + esc(p.note) + '</p>' : '') + '</article>'; }).join('')
+        '<div class="photo sample" style="background:' + (p.photo && p.photo !== 'sample' ? 'var(--tint)' : p.photo === 'sample' ? 'linear-gradient(135deg,#6A3FCB,#FFB52E)' : 'linear-gradient(135deg,hsl(' + p.hue + ' 45% 42%),hsl(' + (p.hue + 40) + ' 55% 62%))') + '">' + (p.photo && p.photo !== 'sample' ? '<img src="' + p.photo + '" alt="Foto do check-in">' : IC.cam) + '</div>' +
+        tags(p) + (p.note ? '<p style="margin:0">' + esc(p.note) + '</p>' : '') + (p.coach ? '<div class="coach"><b>Instrutora Carla:</b> ' + p.coach + '</div>' : '') + '</article>'; }).join('')
       : '<div class="empty"><p style="margin:0">Ninguém fez check-in ainda. Seja a primeira pessoa do grupo.</p></div>';
     const rank = ranking(g).map((r, i) => '<div class="rank' + (r.me ? ' me' : '') + '"><span class="pos">' + (i + 1) + 'º</span>' + avatar(r.name, r.me) + '<span><b>' + esc(r.name) + (r.me ? ' (você)' : '') + '</b><br><span class="small muted">' + r.aulas + (r.aulas === 1 ? ' aula' : ' aulas') + '</span></span><span class="pts">' + r.p + ' pts</span></div>').join('');
     return header(esc(g.name), 'inicio') + '<div class="body">' +
@@ -297,7 +359,7 @@ const V = {
       '<div class="stat3"><div class="stat"><b>5</b>alunos na turma</div><div class="stat"><b>6 de 11</b>aulas feitas na semana</div><div class="stat"><b>2</b>bateram a meta</div></div>' +
       '<h3 class="section-title">Check-ins de hoje</h3>' +
       '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">hoje, 07:58</span></span></div>' + tags({ ap: 'Reformer', focos: ['Core'] }) +
-      (S.conf ? '<span class="pill pill-good" style="align-self:flex-start">Presença confirmada</span>' : '<button type="button" class="btn btn-sm" style="align-self:flex-start" data-a="presenca">Confirmar presença</button>') + '</div>' +
+      '<div class="wrap" style="align-items:center">' + (S.conf ? '<span class="pill pill-good">Presença confirmada</span>' : '<button type="button" class="btn btn-sm" data-a="presenca">Confirmar presença</button>') + act('c1', 'Elogiar no feed', 'No app, a Marina veria o seu comentário no feed.') + '</div></div>' +
       '<h3 class="section-title">Precisam de atenção</h3>' +
       '<div class="who warn"><div class="row">' + avatar('Renata', false) + '<span><b>Renata</b><br><span class="small muted">Não vem há 9 dias · plano de 2 aulas por semana</span></span></div><span class="small">2 reposições pendentes</span><div class="wrap">' +
       act('r1', 'Mandar incentivo', 'No app, a Renata receberia o seu incentivo.') + act('r2', 'Sugerir reposição', 'No app, a Renata receberia horários para repor.') + '</div></div>' +
@@ -307,11 +369,36 @@ const V = {
       '<div class="who"><div class="row">' + avatar('Marina', false) + '<span><b>Marina</b><br><span class="small muted">2 de 2 aulas · sequência de 6 semanas</span></span></div></div>' +
       '<div class="who"><div class="row">' + avatar('Paula', false) + '<span><b>Paula</b><br><span class="small muted">2 de 2 aulas · sequência de 2 semanas</span></span></div></div>' +
       '<div class="who"><div class="row">' + avatar('Lu', false) + '<span><b>Lu</b><br><span class="small muted">1 de 2 aulas · próxima aula amanhã, 7h</span></span></div></div>' +
+      '<h3 class="section-title">Desafios da turma</h3>' +
+      S.challenges.map(c => '<div class="who"><div class="row"><span class="pill">' + KIND[c.kind] + '</span><span class="grow"></span><span class="small muted">' + c.ends + '</span></div><b>' + esc(c.name) + '</b><span class="small muted">' + (c.created ? 'Publicado agora · aguardando participantes' : c.stat) + '</span></div>').join('') +
+      '<button type="button" class="btn btn-primary" data-a="ndnew">Criar desafio</button>' +
+      '<h3 class="section-title">Fotos para confirmar</h3>' +
+      '<div class="who"><div class="row">' + avatar('Paula', false) + '<span><b>Paula</b><br><span class="small muted">Teaser no Reformer · enviada hoje</span></span></div><div class="wrap">' + act('p1', 'Confirmar exercício', 'Exercício da Paula confirmado. Ela ganha 30 pontos.') + '</div></div>' +
+      '<h3 class="section-title">Regras de reposição</h3>' +
+      '<div class="card"><span class="small muted">Avisar a falta com antecedência de</span>' + num('rule', 'h', RULE.h, 'horas') + '<span class="small muted">Prazo para repor a aula</span>' + num('rule', 'd', RULE.d, 'dias') + '</div>' +
       '<p class="small muted center">O painel faria parte do plano para instrutoras e estúdios.</p></div>';
+  },
+
+  desafios: () => header('Desafios da turma', 'inicio') + '<div class="body">' + (inTurma() ? S.challenges.map(desafioCard).join('')
+    : '<div class="empty"><p style="margin:0">Os desafios são criados pela instrutora de cada turma. Entre na Turma das 7h com o código PILA7 para participar.</p></div>') + '</div>',
+
+  novoDesafio: () => { const d = S.nd, k = d.kind, unit = { frequencia: 'aulas', sequencia: 'semanas seguidas', coletivo: 'aulas da turma' }[k];
+    return header('Criar desafio', 'painel') + '<div class="body">' +
+      '<div class="field"><b>Formato</b><div class="chips">' + Object.keys(KIND).map(x => '<button type="button" class="chip" aria-pressed="' + (x === k) + '" data-a="ndkind" data-v="' + x + '">' + KIND[x] + '</button>').join('') + '</div><span class="small muted">' + FDESC[k] + '</span></div>' +
+      '<div class="field"><b>Modelos prontos</b><div class="chips">' + TPL[k].map((t, i) => '<button type="button" class="chip" data-a="ndtpl" data-i="' + i + '">' + t.n + '</button>').join('') + '</div></div>' +
+      '<div class="field"><label for="f-cname">Nome do desafio</label><input id="f-cname" maxlength="40" autocomplete="off" value="' + esc(d.name) + '" placeholder="exemplo: Mês sem faltas"></div>' +
+      (k === 'exercicio' ? '<div class="field"><label for="f-ex">Exercício</label><input id="f-ex" maxlength="30" autocomplete="off" value="' + esc(d.ex) + '" placeholder="exemplo: Teaser"></div>' : '') +
+      (unit ? '<div class="field"><b>Meta</b>' + num('ndstep', k === 'coletivo' ? '5' : '1', d.target, unit) + '</div>' : '') +
+      (k === 'cartela' ? '<div class="field"><b>Itens da cartela</b><div class="chips">' + POOL.map(it => chip('nditem', it, d.items.includes(it))).join('') + '</div></div>' : '') +
+      (k === 'frequencia' || k === 'exercicio' ? '<div class="field"><b>Aparelho' + (k === 'frequencia' ? ' (opcional)' : '') + '</b><div class="chips">' + APS.map(a => chip('ndap', a, d.ap === a)).join('') + '</div></div>' : '') +
+      '<div class="field"><b>Duração</b><div class="chips">' + [7, 15, 30].map(n => '<button type="button" class="chip" aria-pressed="' + (d.days === n) + '" data-a="nddays" data-v="' + n + '">' + n + ' dias</button>').join('') + '</div></div>' +
+      '<div class="field"><label for="f-reward">Prêmio</label><input id="f-reward" maxlength="50" autocomplete="off" value="' + esc(d.reward) + '" placeholder="exemplo: Selo do mês"><div class="chips">' + ['Selo', '30 pontos extras', 'Brinde do estúdio'].map(r => '<button type="button" class="chip" data-a="ndrew" data-v="' + r + '">' + r + '</button>').join('') + '</div></div>' +
+      (S.err ? '<p class="error">' + S.err + '</p>' : '') + '<button type="button" class="btn btn-primary" data-a="ndpublish">Publicar desafio</button></div>';
   },
 
   perfil: () => header('Perfil', 'inicio') + '<div class="body grow"><div class="row">' + avatar(S.user.name, true) + '<span><b>' + esc(S.user.name) + '</b><br><span class="muted">@' + esc(S.user.handle) + '</span></span></div>' +
     '<div class="card"><b>Meta semanal</b>' + stepper(S.user.goal) + '<p class="small muted" style="margin:0">No app, a nova meta vale a partir da próxima semana.</p></div>' +
+    '<div class="card"><b>Dias de aula</b><div class="chips">' + DAYS.map(x => chip('day', x, S.days.includes(x))).join('') + '</div><p class="small muted" style="margin:0">O app lembra antes de cada aula.</p></div>' +
     '<div class="grow"></div><button type="button" class="btn" data-a="logout">Sair da conta</button></div>'
 };
 
@@ -321,7 +408,7 @@ const A = {
   go: el => go(el.dataset.to),
   login: () => go('cadastro'),
   demo: () => { S.user = { name: 'Lu', handle: 'lu.pilates', goal: 2 }; S.week = 1; S.streak = 3; S.me = { aulas: 5, metas: 2 }; S.groups = [demoGroup()];
-    S.hist = { Reformer: 3, Cadillac: 1, Chair: 0, Barrel: 0, Solo: 1 }; S.pain = [4, 4, 3, 3, 2]; S.cem = true; go('inicio'); },
+    S.hist = { Reformer: 3, Cadillac: 1, Chair: 0, Barrel: 0, Solo: 1 }; S.pain = [4, 4, 3, 3, 2]; S.cem = true; S.days = ['Ter', 'Qui']; S.repo = 1; go('inicio'); },
   goal: el => { const d = Number(el.dataset.d);
     if (S.screen === 'perfil') { S.user.goal = Math.min(7, Math.max(1, S.user.goal + d)); document.getElementById('goal-out').textContent = S.user.goal; }
     else { S.draftGoal = Math.min(7, Math.max(1, S.draftGoal + d)); document.getElementById('goal-out').textContent = S.draftGoal; } },
@@ -361,15 +448,38 @@ const A = {
       if (S.ap) S.hist[S.ap] += 1;
       const after = S.groups.length ? myPos(S.groups[0]) : 0;
       S.last = { bonus, msg: after && after < before ? 'Você subiu para o ' + after + 'º lugar em ' + esc(S.groups[0].name) + '.' : '' };
+      S.challenges.forEach(c => { if (c.joined && c.kind === 'frequencia' && c.ap && c.ap === S.ap) c.n = (c.n || 0) + 1; });
+      S.last.ch = inTurma() ? S.challenges.filter(c => c.joined && (c.kind === 'frequencia' || c.kind === 'coletivo')).map(c => esc(c.name) + ': ' + prog(c) + ' de ' + c.target) : [];
       S.photo = null; S.ap = null; S.focos = []; go('feito'); }, 1300); },
-  logout: () => reset()
+  cjoin: el => { const c = S.challenges.find(x => x.id === el.dataset.id); c.joined = true; if (c.kind === 'frequencia') c.start = S.me.aulas; if (c.kind === 'coletivo') c.start = turmaTotal(); render(); toast('Você entrou no desafio.'); },
+  csend: el => { S.challenges.find(x => x.id === el.dataset.id).sent = true; render(); toast('Foto de exemplo enviada para a instrutora.'); },
+  cok: el => { const c = S.challenges.find(x => x.id === el.dataset.id); c.ok = true; const p = /pontos/.test(c.reward); if (p) S.me.extra = (S.me.extra || 0) + 30; render(); toast(p ? 'Exercício confirmado: +30 pontos.' : 'Exercício confirmado.'); },
+  repor: () => toast('No app, você veria os horários livres para repor em até ' + RULE.d + ' dias.'),
+  day: el => { const v = el.dataset.v; S.days = DAYS.filter(x => x === v ? !S.days.includes(v) : S.days.includes(x)); render(); },
+  rule: el => { const k = el.dataset.k; RULE[k] = Math.min(k === 'h' ? 48 : 60, Math.max(1, RULE[k] + Number(el.dataset.d))); render(); },
+  ndnew: () => { S.nd = { kind: 'frequencia', name: '', ex: '', target: 8, days: 30, ap: null, items: [], reward: '' }; go('novoDesafio'); },
+  ndkind: el => nd(() => { const k = el.dataset.v; S.nd.kind = k; S.nd.target = { frequencia: 8, sequencia: 4, coletivo: 40 }[k] || 1; S.nd.items = []; S.nd.ap = null; }),
+  ndtpl: el => nd(() => { const t = TPL[S.nd.kind][Number(el.dataset.i)]; Object.assign(S.nd, { name: t.n, target: t.target || S.nd.target, days: t.days, reward: t.reward, items: (t.items || []).slice(), ap: t.ap || null, ex: t.ex || '' }); }),
+  ndstep: el => nd(() => { S.nd.target = Math.min(200, Math.max(1, S.nd.target + Number(el.dataset.d) * Number(el.dataset.k))); }),
+  nddays: el => nd(() => { S.nd.days = Number(el.dataset.v); }),
+  ndap: el => nd(() => { S.nd.ap = S.nd.ap === el.dataset.v ? null : el.dataset.v; }),
+  nditem: el => nd(() => { const v = el.dataset.v; S.nd.items = S.nd.items.includes(v) ? S.nd.items.filter(x => x !== v) : S.nd.items.concat([v]); }),
+  ndrew: el => nd(() => { S.nd.reward = el.dataset.v; }),
+  ndpublish: () => { ndSync(); const d = S.nd; let err = '';
+    if (!d.name) err = 'Dê um nome ao desafio.'; else if (d.kind === 'exercicio' && !d.ex) err = 'Diga qual é o exercício.'; else if (d.kind === 'cartela' && d.items.length < 2) err = 'Escolha pelo menos 2 itens para a cartela.';
+    if (err) { S.err = err; render(); return; }
+    const ap = d.ap ? (d.ap === 'Chair' ? ' na Chair' : d.ap === 'Solo' ? ' no solo' : ' no ' + d.ap) : '';
+    const desc = { frequencia: 'Complete ' + d.target + ' aulas' + ap + ' em ' + d.days + ' dias.', sequencia: 'Bata a sua meta por ' + d.target + ' semanas seguidas.', exercicio: 'Faça ' + d.ex + ap + ' em aula e envie a foto. A instrutora confirma.', cartela: 'Complete os ' + d.items.length + ' itens da cartela.', coletivo: 'Cada aula de cada aluno conta para a meta de ' + d.target + ' aulas da turma.' }[d.kind];
+    const c = { id: 'n' + (CREATED.length + 1), kind: d.kind, name: d.name, desc, target: d.kind === 'exercicio' ? 1 : d.target, items: d.items.slice(), ap: d.kind === 'frequencia' ? d.ap : null, ends: 'termina em ' + d.days + ' dias', reward: d.reward || 'Selo', joined: false, created: true };
+    CREATED.push(c); S.challenges.push(c); go('painel'); toast('Desafio publicado para a Turma das 7h.'); },
+  logout: () => reset(true)
 };
 function keep(fn) { const n = document.getElementById('f-note'); const note = n ? n.value : ''; const y = document.getElementById('app').scrollTop; fn(); render(); const m = document.getElementById('f-note'); if (m) m.value = note; document.getElementById('app').scrollTop = y; }
 function setPhoto(src) { keep(() => { S.photo = src; }); }
 
 document.getElementById('app').addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (el && !el.disabled && A[el.dataset.a]) A[el.dataset.a](el); });
 document.getElementById('app').addEventListener('change', e => { if (e.target.id === 'f-photo' && e.target.files && e.target.files[0]) setPhoto(URL.createObjectURL(e.target.files[0])); });
-document.getElementById('btn-reset').addEventListener('click', reset);
+document.getElementById('btn-reset').addEventListener('click', () => reset(false));
 reset();
 </script>
 </body>
